@@ -1,36 +1,46 @@
-public class IntQueueStack implements IntStack{
-    // use two queues as back-end
+public class IntQueueStack implements IntStack {
+    private IntLinkedListQueue first = new IntLinkedListQueue();
+    private IntLinkedListQueue second = new IntLinkedListQueue();
 
     @Override
     public void push(int value) {
-
+        first.enqueue(value);
     }
 
     @Override
     public int pop() {
-        return 0;
+        if (isEmpty()) {
+            throw new IllegalStateException("Stack is empty");
+        }
+        while (first.size() > 1) {
+            second.enqueue(first.dequeue());
+        }
+        int value = first.dequeue();
+        IntLinkedListQueue temp = first;
+        first = second;
+        second = temp;
+        return value;
     }
 
     @Override
     public int peek() {
-        return 0;
+        int value = pop();
+        push(value);
+        return value;
     }
 
     @Override
     public int size() {
-        return 0;
+        return first.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return first.isEmpty();
     }
 
     @Override
     public String toString() {
-        // returns String representation of the stack
-        // "[]" for empty stack
-        // "[7, 8, 6]" for non-empty one (bottom-element-first)
-        return super.toString();
+        return first.toString();
     }
 }

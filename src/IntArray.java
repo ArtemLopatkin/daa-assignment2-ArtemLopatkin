@@ -1,49 +1,90 @@
 public class IntArray {
-    public IntArray(){
-        // creates an empty array
+    private int[] data;
+    private int size;
+
+    public IntArray() {
+        data = new int[8];
     }
 
-    public void add(int value){
-        // adds value at the end
+    public void add(int value) {
+        ensureCapacity(size + 1);
+        data[size++] = value;
     }
 
-    public void add(int index, int value){
-        // adds value at index
+    public void add(int index, int value) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index: " + index);
+        }
+        ensureCapacity(size + 1);
+        for (int i = size; i > index; i--) {
+            data[i] = data[i - 1];
+        }
+        data[index] = value;
+        size++;
     }
 
-    public int get(int index){
-        // returns value at index
-        return 0;
+    public int get(int index) {
+        checkIndex(index);
+        return data[index];
     }
 
-    public void set(int index, int value){
-        // updates value at index
+    public void set(int index, int value) {
+        checkIndex(index);
+        data[index] = value;
     }
 
-    public int remove(int index){
-        // removes and returns value at index
-        return 0;
+    public int remove(int index) {
+        checkIndex(index);
+        int value = data[index];
+        for (int i = index; i < size - 1; i++) {
+            data[i] = data[i + 1];
+        }
+        size--;
+        return value;
     }
 
-    public int size(){
-        // returns the current size of array
-        return 0;
+    public int size() {
+        return size;
     }
 
-    public boolean isEmpty(){
-        // returns whether array is empty
-        return false;
+    public boolean isEmpty() {
+        return size == 0;
     }
 
-    public void add(int[] values){
-        // adds entire array values
+    public void add(int[] values) {
+        ensureCapacity(size + values.length);
+        for (int value : values) {
+            data[size++] = value;
+        }
     }
 
     @Override
     public String toString() {
-        // return String representation of array
-        // "[]" empty array
-        // "[7, 8, 6]" non-empty array
-        return super.toString();
+        StringBuilder result = new StringBuilder("[");
+        for (int i = 0; i < size; i++) {
+            if (i > 0) {
+                result.append(", ");
+            }
+            result.append(data[i]);
+        }
+        return result.append(']').toString();
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index);
+        }
+    }
+
+    private void ensureCapacity(int needed) {
+        if (needed <= data.length) {
+            return;
+        }
+        int capacity = Math.max(needed, data.length * 2);
+        int[] larger = new int[capacity];
+        for (int i = 0; i < size; i++) {
+            larger[i] = data[i];
+        }
+        data = larger;
     }
 }
